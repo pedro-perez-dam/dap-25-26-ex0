@@ -1,0 +1,24 @@
+services:
+  dap-db:
+    build: .
+    container_name: dap-db
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: rootdap
+
+  dap-db-client:
+    image: phpmyadmin:latest
+    container_name: dap-db-client
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: dap-db
+    depends_on:
+      - dap-db
+    networks:
+      - dap-net
+networks:
+  dap-net:
+    driver: bridge
